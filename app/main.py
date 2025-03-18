@@ -6,6 +6,8 @@ import os
 from langchain_groq import ChatGroq
 # loading the Ollama embeddings
 from langchain_ollama import OllamaEmbeddings
+# loading huggingface embeddings for open-source
+from langchain.embeddings import HuggingFaceEmbeddings
 # for combining documents using chains
 from langchain.chains.combine_documents import create_stuff_documents_chain
 # importing the chatprompt template
@@ -34,7 +36,7 @@ st.markdown("#### You can ask me anything about the world of Harry Potter, and I
 # Load the FAISS vector database
 if "vectors" not in st.session_state:
     if os.path.exists(VECTOR_DB_PATH):
-        st.session_state.vectors = FAISS.load_local(VECTOR_DB_PATH, OllamaEmbeddings(model="all-minilm"), allow_dangerous_deserialization=True)
+        st.session_state.vectors = FAISS.load_local(VECTOR_DB_PATH, HuggingFaceEmbeddings(model_name="sentence-transformers/all-MiniLM-L6-v2"), allow_dangerous_deserialization=True)
         st.write("Vector DB Loaded from Disk!")
     else:
         st.write("Vector DB not found! Please run precompute_embeddings.py first.")
