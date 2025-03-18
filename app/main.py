@@ -17,10 +17,12 @@ from langchain_community.vectorstores import FAISS
 # loading environment variables
 from dotenv import load_dotenv
 load_dotenv()
+# import path library
+from pathlib import Path
 
-# loading the base_dir and vector db path path
-BASE_DIR = os.getenv("BASE_DIR")
-VECTOR_DB_PATH = os.path.join(BASE_DIR, "data", "database", "faiss_index")
+# Get the absolute path of the current script (main.py)
+BASE_DIR = Path(__file__).resolve().parent.parent  # Goes up one level to 'harry-potter-chatbot'
+VECTOR_DB_PATH = BASE_DIR / "data" / "database" / "faiss_index"
 
 # load the groq api key
 GROQ_API_KEY = os.getenv("GROQ_API_KEY")
