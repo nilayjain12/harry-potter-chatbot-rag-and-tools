@@ -3,6 +3,9 @@
 ## Description
 TalWiz is a chatbot application that allows users to ask questions about the Harry Potter universe. Built using Streamlit, it leverages various libraries from Langchain for document retrieval and vector storage (FAISS) to provide accurate and engaging responses.
 
+## Link To The APP
+#### https://nilayjain12-harry-potter-chatbot-rag-and-tools-appmain-y8v5ii.streamlit.app
+
 ## Installation
 To set up the project, follow these steps:
 
