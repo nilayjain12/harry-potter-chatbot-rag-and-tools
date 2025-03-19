@@ -6,7 +6,7 @@ body {
 
 /* Input fields */
 .stTextInput, .stTextInput input, .stTextInput label {
-    color: #FFD700 !important; /* Golden text */
+    color: #000000 !important; /* Golden text */
     font-size: 18px;
     font-family: 'Georgia', serif;
     margin: 0 !important;
