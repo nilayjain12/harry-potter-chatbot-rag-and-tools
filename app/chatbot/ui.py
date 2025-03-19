@@ -7,15 +7,21 @@ from agents.duckduckgo_search_agent import retrieve_search_results
 from pathlib import Path
 
 BASE_DIR = Path(__file__).resolve().parent.parent.parent
-CSS_PATH = BASE_DIR / "app" / "frontend" / "css" / "style.css"
+CSS_DARK_PATH = BASE_DIR / "app" / "frontend" / "css" / "style_dark.css"
+CSS_LIGHT_PATH = BASE_DIR / "app" / "frontend" / "css" / "style_light.css"
 
-def load_css():
-    with open(CSS_PATH) as f:
+def load_css(theme):
+    css_path = CSS_DARK_PATH if theme == "Dark" else CSS_LIGHT_PATH
+    with open(css_path) as f:
         st.markdown(f"<style>{f.read()}</style>", unsafe_allow_html=True)
 
 def chatbot_ui():
-    load_css()
+    # Theme selection
+    theme = st.radio("Select Theme:", ["Dark", "Light"], horizontal=True)
     
+    # Apply selected theme
+    load_css(theme)
+
     st.title("🧙‍♂️ TalWiz - The Talkative Wizard!")
     st.markdown("### Ask me anything about the wizarding world! ⚡")
     
