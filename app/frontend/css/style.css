@@ -1,0 +1,35 @@
+/* Dark theme adjustments */
+.stTextInput, .stTextInput input, .stTextInput label {
+    color: #FFD700 !important; /* Golden text */
+    font-size: 18px;
+    font-family: 'Georgia', serif;
+    margin: 0 !important;  /* Remove unwanted margins */
+    padding: 5px !important; /* Reduce padding */
+    box-sizing: border-box; /* Ensure padding doesn't affect width */
+}
+
+/* Wizard-like text */
+h1, h2, h3, h4, h5, h6 {
+    color: #FFD700 !important;
+    text-shadow: 2px 2px 4px rgba(0,0,0,0.7);
+    font-family: 'Harry P', cursive;
+    margin: 0 0 10px 0 !important; /* Ensure uniform spacing */
+}
+
+/* Chatbot box styling */
+.stMarkdown, .stTextArea, .stButton {
+    background-color: rgba(0, 0, 0, 0.7) !important;
+    color: white !important;
+    border-radius: 10px;
+    padding: 8px !important; /* Slightly reduce padding */
+    margin: 0 !important; /* Prevent unnecessary space */
+    box-sizing: border-box; /* Ensure content doesn't overflow */
+}
+
+/* Expander styling */
+.st-expander {
+    border: 2px solid #FFD700 !important;
+    border-radius: 8px !important;
+    background-color: rgba(20, 20, 20, 0.8) !important;
+    margin: 0 !important; /* Prevent extra spacing */
+}
