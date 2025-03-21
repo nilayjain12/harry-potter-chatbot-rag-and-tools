@@ -5,7 +5,7 @@ from pymongo import MongoClient
 MONGO_URI = os.getenv("MONGO_URI")
 DATABASE_NAME = os.getenv("DATABASE_NAME")
 
-client = MongoClient(MONGO_URI)
+client = MongoClient(MONGO_URI, connect=False)
 db = client[DATABASE_NAME]
 
 def get_db():
