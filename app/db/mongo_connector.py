@@ -2,7 +2,7 @@ import os
 from pymongo import MongoClient
 
 # Retrieve MongoDB connection details from environment variables
-MONGO_URI = os.getenv("MONGO_URI")
+MONGO_URI = os.getenv("MONGO_URI", "mongodb://localhost:27017/")
 DATABASE_NAME = os.getenv("DATABASE_NAME")
 
 client = MongoClient(MONGO_URI, connect=False)

@@ -1,6 +1,6 @@
 import os
 from pathlib import Path
-from langchain_community.embeddings import HuggingFaceEmbeddings
+from langchain_huggingface import HuggingFaceEmbeddings
 from langchain_community.vectorstores import FAISS
 
 BASE_DIR = Path(__file__).resolve().parent.parent.parent
