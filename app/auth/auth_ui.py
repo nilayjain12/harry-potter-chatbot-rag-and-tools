@@ -1,10 +1,16 @@
 import streamlit as st
 from db.user_db import register_user, login_user, get_chat_history, is_username_taken
+import time  # Added for handling redirection smoothly
 
 def auth_ui():
     st.title("Welcome to TalWiz - A Talkative Wizard Chatbot!")
     st.markdown("Please login or register to continue.")
     
+    # Check if the user is already logged in
+    if "user" in st.session_state and st.session_state.user:
+        st.success(f"Welcome back, {st.session_state.user}!")
+        st.experimental_rerun()  # Redirect to dashboard
+
     auth_mode = st.radio("Choose an option", ["Login", "Register"])
     
     if auth_mode == "Register":
@@ -45,10 +51,15 @@ def auth_ui():
                 else:
                     success, result = login_user(username, password)
                     if success:
-                        st.success("Login successful!")
-                        st.session_state.user = username  # Set logged in user
-                        st.session_state.current_user = username  # Track the chat owner
-                        # Load chat history for the new user
+                        st.success("Login successful! Redirecting...")
+
+                        # Store user session
+                        st.session_state.user = username  
+                        st.session_state.current_user = username  
                         st.session_state.chat_history = get_chat_history(username)
+
+                        # Small delay before redirecting to avoid re-clicking the login button
+                        time.sleep(1)  
+                        st.rerun()  # Redirect to dashboard
                     else:
                         st.error("Invalid username or password.")

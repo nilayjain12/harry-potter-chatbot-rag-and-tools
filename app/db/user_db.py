@@ -24,7 +24,7 @@ def login_user(username, password):
     """Attempt to login a user."""
     user = users_collection.find_one({"username": username, "password": password})
     if user:
-        return True, user
+        return True, user["username"]  # Return only username instead of full user object
     return False, "Invalid username or password."
 
 def get_chat_history(user_id):
