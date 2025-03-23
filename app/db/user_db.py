@@ -62,3 +62,7 @@ def delete_chat_message(user_id, index):
                 {"user_id": user_id},
                 {"$set": {"history": history}}
             )
+
+def is_username_taken(username):
+    """Check if the username already exists in the database."""
+    return users_collection.count_documents({"username": username}) > 0

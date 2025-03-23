@@ -1,5 +1,5 @@
 import streamlit as st
-from db.user_db import register_user, login_user, get_chat_history
+from db.user_db import register_user, login_user, get_chat_history, is_username_taken
 
 def auth_ui():
     st.title("Welcome to TalWiz - A Talkative Wizard Chatbot!")
@@ -20,14 +20,12 @@ def auth_ui():
                     st.error("Username cannot be empty.")
                 elif not password:
                     st.error("Password cannot be empty.")
+                elif is_username_taken(username):  # Check if username exists
+                    st.error("Username already exists. Please choose a different one.")
                 else:
                     success, message = register_user(username, password)
                     if success:
-                        st.success(message)
-                        st.session_state.user = username  # Set logged in user
-                        st.session_state.current_user = username  # Track the chat owner
-                        # Load chat history for the new user
-                        st.session_state.chat_history = get_chat_history(username)
+                        st.success("Registration successful! Please log in.")
                     else:
                         st.error(message)
                         
@@ -50,4 +48,7 @@ def auth_ui():
                         st.success("Login successful!")
                         st.session_state.user = username  # Set logged in user
                         st.session_state.current_user = username  # Track the chat owner
-                        # Load chat hist
+                        # Load chat history for the new user
+                        st.session_state.chat_history = get_chat_history(username)
+                    else:
+                        st.error("Invalid username or password.")
