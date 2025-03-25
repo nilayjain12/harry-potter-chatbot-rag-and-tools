@@ -78,11 +78,13 @@ def chatbot_ui():
             retrieved_texts = [doc.page_content for doc in retrieved_documents]
             
             st.session_state.retrieved_docs.append(retrieved_texts)
+            st.session_state.duckduckgo_search_results = duckduckgo_search_results
             
             st.session_state.chat_history.append({
                 "user": user_prompt,
                 "bot": response,
-                "retrieved_docs": retrieved_texts
+                "retrieved_docs": retrieved_texts,
+                "duckduckgo_search_results": duckduckgo_search_results
             })
             save_chat_message(user_id, user_prompt, response)
             st.rerun()
@@ -103,3 +105,11 @@ def chatbot_ui():
                     st.write("No documents retrieved.")
 
             st.markdown("<hr style='margin: 5px 0;'>", unsafe_allow_html=True)
+
+            with st.expander(f"🔍 DuckDuckGo Search Results (Chat {len(st.session_state.chat_history) - idx})"):
+                if msg.get("duckduckgo_search_results"):
+                    st.write(msg["duckduckgo_search_results"])
+                else:
+                    st.write("No search results found.")
+
+
