@@ -104,8 +104,6 @@ def chatbot_ui():
                 else:
                     st.write("No documents retrieved.")
 
-            st.markdown("<hr style='margin: 5px 0;'>", unsafe_allow_html=True)
-
             with st.expander(f"🔍 DuckDuckGo Search Results (Chat {len(st.session_state.chat_history) - idx})"):
                 if msg.get("duckduckgo_search_results"):
                     st.write(msg["duckduckgo_search_results"])
