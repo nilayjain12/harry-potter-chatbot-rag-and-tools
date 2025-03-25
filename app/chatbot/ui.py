@@ -109,5 +109,3 @@ def chatbot_ui():
                     st.write(msg["duckduckgo_search_results"])
                 else:
                     st.write("No search results found.")
-
-
