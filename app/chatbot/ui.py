@@ -46,6 +46,8 @@ def chatbot_ui():
     if not vectors:
         st.error("❌ Vector DB not found! The Ministry of Magic is investigating...")
         return
+    else:
+        st.write(f"💡TalWiz is ready to chat!")
 
     if "chat_history" not in st.session_state:
         st.session_state.chat_history = get_chat_history(user_id)
@@ -92,7 +94,7 @@ def chatbot_ui():
             st.markdown(f"<div class='message user-message'><strong>You:</strong> {msg['user']}</div>", unsafe_allow_html=True)
             st.markdown(f"<div class='message bot-message'><strong>TalWiz:</strong> {msg['bot']}</div>", unsafe_allow_html=True)
             
-            with st.expander(f"📄 Retrieved Document Context (Chat {len(st.session_state.chat_history) - idx})"):
+            with st.expander(f"📜 Retrieved Document Context (Chat {len(st.session_state.chat_history) - idx})"):
                 if msg.get("retrieved_docs"):
                     for doc in msg["retrieved_docs"]:
                         st.write(doc)
