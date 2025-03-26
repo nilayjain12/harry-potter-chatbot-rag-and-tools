@@ -150,3 +150,5 @@ def chatbot_ui():
             with st.expander(f"🔍 DuckDuckGo Search Results (Chat {len(st.session_state.chat_history) - idx})"):
                 if msg.get("duckduckgo_search_results"):
                     st.write(msg["duckduckgo_search_results"])
+                else:
+                    st.write("No search results found.")
