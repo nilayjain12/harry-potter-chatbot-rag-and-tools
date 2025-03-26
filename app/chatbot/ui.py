@@ -75,6 +75,7 @@ def chatbot_ui():
                 db["users"].update_one({"username": user_id}, {"$set": {"groqcloud_api_key": new_api_key}}, upsert=True)
                 st.session_state.groqcloud_api_key = new_api_key
                 st.success("GroqCloud API key saved!")
+                st.rerun()
             else:
                 st.error("Invalid GroqCloud API Key! Please enter a correct key.")
                 st.stop()
