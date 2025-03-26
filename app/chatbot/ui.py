@@ -1,11 +1,12 @@
 import streamlit as st
 from pathlib import Path
-from chatbot.llm import llm, prompt
 from chatbot.retriever import load_vector_db
 from langchain.chains import create_retrieval_chain
 from langchain.chains.combine_documents import create_stuff_documents_chain
 from agents.duckduckgo_search_agent import retrieve_search_results
 from db.user_db import get_chat_history, save_chat_message
+from db.mongo_connector import get_db  # Import to update user record
+from chatbot.llm import get_chat_groq_instance, prompt, validate_api_key  # Notice we now import the function
 
 BASE_DIR = Path(__file__).resolve().parent.parent.parent
 CSS_DARK_PATH = BASE_DIR / "app" / "frontend" / "css" / "style_dark.css"
@@ -27,7 +28,7 @@ def chatbot_ui():
         return
 
     user_id = st.session_state.user
-    
+
     if st.sidebar.button("Logout"):
         del st.session_state["user"]
         st.rerun()
@@ -48,6 +49,51 @@ def chatbot_ui():
         return
     else:
         st.write(f"💡TalWiz is ready to chat!")
+
+    # ----------------- GroqCloud API Key Input Section -----------------
+    # GroqCloud API Key Input Section
+    db = get_db()
+    user_doc = db["users"].find_one({"username": user_id})
+    current_groq_api_key = user_doc.get("groqcloud_api_key", "") if user_doc else ""
+
+    if validate_api_key(current_groq_api_key):
+        st.write("👍 API Key is valid!")
+    else:
+        st.session_state.groqcloud_api_key = None
+        st.error("Invalid or missing GroqCloud API Key. Please enter a valid key.")
+
+    with st.form("groq_api_key_form"):
+        new_api_key = st.text_input(
+            "Enter your GroqCloud API Key:",
+            value=current_groq_api_key,
+            type="password",
+            help="Provide your GroqCloud API key. If you already entered one before, it is loaded below. You can update it if needed."
+        )
+        submitted = st.form_submit_button("Save API Key")
+        if submitted:
+            if validate_api_key(new_api_key):
+                db["users"].update_one({"username": user_id}, {"$set": {"groqcloud_api_key": new_api_key}}, upsert=True)
+                st.session_state.groqcloud_api_key = new_api_key
+                st.success("GroqCloud API key saved!")
+            else:
+                st.error("Invalid GroqCloud API Key! Please enter a correct key.")
+                st.stop()
+    # --------------------------------------------------------------------
+
+    # Validate the API key (do not fallback to .env key for logged-in users)
+    if not current_groq_api_key:
+        st.error("Error: No GroqCloud API key provided. Please enter your API key above to proceed.")
+        st.stop()
+
+    # Now, try to instantiate the ChatGroq client and optionally run a test query.
+    try:
+        llm = get_chat_groq_instance(current_groq_api_key)
+        # Optionally, run a lightweight test call to further validate the key.
+        # For example, sending a simple prompt (if your API supports it) like "ping" might work:
+        # test_response = llm("ping")
+    except Exception as e:
+        st.error(f"Invalid GroqCloud API Key! Please Enter Correct Key.")
+        st.stop()
 
     if "chat_history" not in st.session_state:
         st.session_state.chat_history = get_chat_history(user_id)
