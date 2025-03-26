@@ -56,11 +56,9 @@ def chatbot_ui():
     user_doc = db["users"].find_one({"username": user_id})
     current_groq_api_key = user_doc.get("groqcloud_api_key", "") if user_doc else ""
 
-    if validate_api_key(current_groq_api_key):
-        st.write("👍 API Key is valid!")
-    else:
-        st.session_state.groqcloud_api_key = None
-        st.error("Invalid or missing GroqCloud API Key. Please enter a valid key.")
+    # Validate the API key when the user submits their question
+
+
 
     with st.form("groq_api_key_form"):
         new_api_key = st.text_input(
@@ -86,15 +84,13 @@ def chatbot_ui():
         st.error("Error: No GroqCloud API key provided. Please enter your API key above to proceed.")
         st.stop()
 
-    # Now, try to instantiate the ChatGroq client and optionally run a test query.
-    try:
-        llm = get_chat_groq_instance(current_groq_api_key)
-        # Optionally, run a lightweight test call to further validate the key.
-        # For example, sending a simple prompt (if your API supports it) like "ping" might work:
-        # test_response = llm("ping")
-    except Exception as e:
-        st.error(f"Invalid GroqCloud API Key! Please Enter Correct Key.")
+    # Validate the API key when the user submits their question
+    if not current_groq_api_key or not validate_api_key(current_groq_api_key):
+        st.error("Invalid or missing GroqCloud API Key. Please enter a valid key.")
         st.stop()
+
+    llm = get_chat_groq_instance(current_groq_api_key)  # Moved API key validation here
+
 
     if "chat_history" not in st.session_state:
         st.session_state.chat_history = get_chat_history(user_id)
@@ -154,5 +150,3 @@ def chatbot_ui():
             with st.expander(f"🔍 DuckDuckGo Search Results (Chat {len(st.session_state.chat_history) - idx})"):
                 if msg.get("duckduckgo_search_results"):
                     st.write(msg["duckduckgo_search_results"])
-                else:
-                    st.write("No search results found.")
