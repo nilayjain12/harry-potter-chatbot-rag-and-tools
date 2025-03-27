@@ -75,6 +75,9 @@ def chatbot_ui():
             else:
                 st.error("Invalid GroqCloud API Key! Please enter a correct key.")
                 st.stop()
+    
+    # add a link to get the API key from GroqCloud
+    st.sidebar.markdown("🔗 [Get your GroqCloud API Key](https://console.groq.com/keys)")
 
     # Validate the API key (do not fallback to .env key for logged-in users)
     if not current_groq_api_key:
@@ -148,3 +151,5 @@ def chatbot_ui():
                     st.write(msg["duckduckgo_search_results"])
                 else:
                     st.write("No search results found.")
+            
+            st.write("---")
