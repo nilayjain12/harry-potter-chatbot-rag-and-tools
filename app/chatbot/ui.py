@@ -50,17 +50,12 @@ def chatbot_ui():
     else:
         st.write(f"💡TalWiz is ready to chat!")
 
-    # ----------------- GroqCloud API Key Input Section -----------------
-    # GroqCloud API Key Input Section
     db = get_db()
     user_doc = db["users"].find_one({"username": user_id})
     current_groq_api_key = user_doc.get("groqcloud_api_key", "") if user_doc else ""
 
-    # Validate the API key when the user submits their question
-
-
-
-    with st.form("groq_api_key_form"):
+    # Move API key input to the sidebar
+    with st.sidebar.form("groq_api_key_form"):
         new_api_key = st.text_input(
             "Enter your GroqCloud API Key:",
             value=current_groq_api_key,
@@ -77,20 +72,18 @@ def chatbot_ui():
             else:
                 st.error("Invalid GroqCloud API Key! Please enter a correct key.")
                 st.stop()
-    # --------------------------------------------------------------------
 
     # Validate the API key (do not fallback to .env key for logged-in users)
     if not current_groq_api_key:
         st.error("Error: No GroqCloud API key provided. Please enter your API key above to proceed.")
         st.stop()
-
+        
     # Validate the API key when the user submits their question
     if not current_groq_api_key or not validate_api_key(current_groq_api_key):
         st.error("Invalid or missing GroqCloud API Key. Please enter a valid key.")
         st.stop()
 
     llm = get_chat_groq_instance(current_groq_api_key)  # Moved API key validation here
-
 
     if "chat_history" not in st.session_state:
         st.session_state.chat_history = get_chat_history(user_id)
