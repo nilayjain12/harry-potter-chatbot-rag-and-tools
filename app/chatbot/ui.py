@@ -29,11 +29,14 @@ def chatbot_ui():
 
     user_id = st.session_state.user
 
-    if st.sidebar.button("Logout"):
+    # display the user's name in the sidebar and provide a logout button
+    st.sidebar.title(f"⚡🧹⚯ - {user_id}")
+
+    if st.sidebar.button("↻ Logout"):
         del st.session_state["user"]
         st.rerun()
 
-    if st.sidebar.button("Delete Current Chat"):
+    if st.sidebar.button("🗑️ Delete Current Chat"):
         from db.user_db import clear_chat_history
         clear_chat_history(user_id)
         st.session_state.chat_history = []
@@ -62,7 +65,7 @@ def chatbot_ui():
             type="password",
             help="Provide your GroqCloud API key. If you already entered one before, it is loaded below. You can update it if needed."
         )
-        submitted = st.form_submit_button("Save API Key")
+        submitted = st.form_submit_button("⎙ Save API Key")
         if submitted:
             if validate_api_key(new_api_key):
                 db["users"].update_one({"username": user_id}, {"$set": {"groqcloud_api_key": new_api_key}}, upsert=True)
@@ -92,7 +95,7 @@ def chatbot_ui():
 
     with st.form("chat_form", clear_on_submit=True):
         user_prompt = st.text_input("Your message", key="user_input")
-        submitted = st.form_submit_button("Send")
+        submitted = st.form_submit_button("ᯓ➤ Send")
         if submitted and user_prompt:
             document_chain = create_stuff_documents_chain(llm=llm, prompt=prompt)
             duckduckgo_search_results = retrieve_search_results(user_prompt)
@@ -129,8 +132,8 @@ def chatbot_ui():
     with conversation_container:
         reversed_chat_history = reversed(st.session_state.chat_history)
         for idx, msg in enumerate(reversed_chat_history):
-            st.markdown(f"<div class='message user-message'><strong>You:</strong> {msg['user']}</div>", unsafe_allow_html=True)
-            st.markdown(f"<div class='message bot-message'><strong>TalWiz:</strong> {msg['bot']}</div>", unsafe_allow_html=True)
+            st.markdown(f"<div class='message user-message'>🫵🏻 <strong>You:</strong> {msg['user']}</div>", unsafe_allow_html=True)
+            st.markdown(f"<div class='message bot-message'>🦉 <strong>TalWiz:</strong> {msg['bot']}</div>", unsafe_allow_html=True)
             
             with st.expander(f"📜 Retrieved Document Context (Chat {len(st.session_state.chat_history) - idx})"):
                 if msg.get("retrieved_docs"):
