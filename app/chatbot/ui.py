@@ -35,6 +35,26 @@ def chatbot_ui():
     if "retrieved_docs" not in st.session_state:
         st.session_state.retrieved_docs = []
     
+    conversation_container = st.container()
+    with conversation_container:
+        for idx, msg in enumerate(st.session_state.chat_history):
+            st.markdown(f"<div class='message user-message'>🫵🏻 <strong>You:</strong> {msg['user']}</div>", unsafe_allow_html=True)            
+            st.markdown(f"<div class='message bot-message'>🦉 <strong>TalWiz:</strong> {msg['bot']}</div>", unsafe_allow_html=True)            
+
+            with st.expander(f"📜 Retrieved Document Context (Chat {len(st.session_state.chat_history) - idx})"):
+                if msg.get("retrieved_docs"):
+                    for doc in msg["retrieved_docs"]:
+                        st.write(doc)
+                        st.write("---")
+                else:
+                    st.write("No documents retrieved.")
+            
+            with st.expander(f"🔍 DuckDuckGo Search Results (Chat {len(st.session_state.chat_history) - idx})"):
+                if msg.get("duckduckgo_search_results"):
+                    st.write(msg["duckduckgo_search_results"])
+                else:
+                    st.write("No search results found.")
+    
     with st.form("chat_form", clear_on_submit=True):
         user_prompt = st.text_input("Your message", key="user_input")
         submitted = st.form_submit_button("ᯓ➤ Send")
@@ -69,26 +89,3 @@ def chatbot_ui():
             })
             save_chat_message(user_id, user_prompt, response)
             st.rerun()
-    
-    conversation_container = st.container()
-    with conversation_container:
-        reversed_chat_history = reversed(st.session_state.chat_history)
-        for idx, msg in enumerate(reversed_chat_history):
-            st.markdown(f"<div class='message user-message'>🫵🏻 <strong>You:</strong> {msg['user']}</div>", unsafe_allow_html=True)
-            st.markdown(f"<div class='message bot-message'>🦉 <strong>TalWiz:</strong> {msg['bot']}</div>", unsafe_allow_html=True)
-            
-            with st.expander(f"📜 Retrieved Document Context (Chat {len(st.session_state.chat_history) - idx})"):
-                if msg.get("retrieved_docs"):
-                    for doc in msg["retrieved_docs"]:
-                        st.write(doc)
-                        st.write("---")
-                else:
-                    st.write("No documents retrieved.")
-            
-            with st.expander(f"🔍 DuckDuckGo Search Results (Chat {len(st.session_state.chat_history) - idx})"):
-                if msg.get("duckduckgo_search_results"):
-                    st.write(msg["duckduckgo_search_results"])
-                else:
-                    st.write("No search results found.")
-            
-            st.write("---")

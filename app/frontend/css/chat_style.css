@@ -4,6 +4,16 @@
     padding: 10px;
     border: 1px solid #ccc;
     margin-bottom: 10px;
+    /* Ensure the container is scrollable */
+}
+
+.stForm.st-emotion-cache-4uzi61.e1ttwmlf1 {
+    position: sticky;
+    width: auto;
+    bottom: 0;
+    background-color: white; /* Optional: Set background color */
+    padding: 10px; /* Optional: Add padding */
+    z-index: 1000; /* Ensure it stays above other elements */
 }
 
 .message {
