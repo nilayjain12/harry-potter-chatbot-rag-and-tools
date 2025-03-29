@@ -9,6 +9,9 @@ from chatbot.llm import get_chat_groq_instance, prompt
 from frontend.css_loader import load_css
 from chatbot.sidebar import sidebar_pannel
 
+from langchain.memory import ConversationBufferMemory
+from langchain.chains import LLMChain
+
 def chatbot_ui():
     load_css()
     if "user" not in st.session_state:
@@ -61,14 +64,16 @@ def chatbot_ui():
         if submitted and user_prompt:
             document_chain = create_stuff_documents_chain(llm=llm, prompt=prompt)
             duckduckgo_search_results = retrieve_search_results(user_prompt)
-            retriever = vectors.as_retriever(search_kwargs={'k': 3})
+            retriever = vectors.as_retriever(search_kwargs={'k': 3, 'score_threshold': 0.9})
             retriever_chain = create_retrieval_chain(retriever, document_chain)
 
-            recent_history = "\n".join(
-                [f"You: {m['user']}\nTalWiz: {m['bot']}" for m in st.session_state.chat_history[-5:]]
+            # Use the entire chat history:
+            all_history = "\n".join(
+                [f"You: {m['user']}\nTalWiz: {m['bot']}" for m in st.session_state.chat_history]
             )
+
             combined_input = {
-                "chat_history": recent_history,
+                "chat_history": all_history,
                 "input": user_prompt,
                 "search_results": duckduckgo_search_results
             }
