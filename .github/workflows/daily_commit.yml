@@ -1,0 +1,33 @@
+name: Daily Auto Commit
+
+# This schedule triggers the workflow every day at midnight UTC.
+on:
+  schedule:
+    - cron: "0 0 * * *"
+  workflow_dispatch:
+
+jobs:
+  commit:
+    runs-on: ubuntu-latest
+
+    steps:
+      # Check out the repository code
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      # Update a file with the current date and time to register activity.
+      - name: Update timestamp file
+        run: |
+          echo "Updated on $(date)" > timestamp.txt
+
+      # Configure Git with your details and commit the changes.
+      - name: Commit changes
+        run: |
+          git config --global user.email "nilayjain12@gmail.com"
+          git config --global user.name "Nilay Jain"
+          git add timestamp.txt
+          git commit -m "Daily update: $(date)" || echo "No changes to commit"
+
+      # Push the commit to your repository (ensure the branch name matches, e.g., main or master)
+      - name: Push changes
+        run: git push
